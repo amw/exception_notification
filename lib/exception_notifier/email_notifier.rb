@@ -143,7 +143,13 @@ module ExceptionNotifier
     end
 
     def call(exception, options={})
-      create_email(exception, options).deliver
+      email = create_email(exception, options)
+
+      if email.respond_to? :deliver_now
+        email.deliver_now
+      else
+        email.deliver
+      end
     end
 
     def create_email(exception, options={})
